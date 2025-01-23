@@ -1,4 +1,3 @@
-import queryString from "query-string";
 import qs from "query-string";
 
 interface UrlQueryParams {
@@ -8,13 +7,12 @@ interface UrlQueryParams {
 }
 
 interface RemoveUrlQueryParams {
-  params: string;
   keysToRemove: string[];
+  params: string;
 }
 
 export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
   const queryString = qs.parse(params);
-
   queryString[key] = value;
 
   return qs.stringifyUrl({
@@ -24,8 +22,8 @@ export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
 };
 
 export const removeKeysFormUrlQuery = ({
-  params,
   keysToRemove,
+  params,
 }: RemoveUrlQueryParams) => {
   const queryString = qs.parse(params);
 

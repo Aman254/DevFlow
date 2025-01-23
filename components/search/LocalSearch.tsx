@@ -1,22 +1,21 @@
 "use client";
 import Image from "next/image";
 import { Input } from "../ui/input";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formUrlQuery, removeKeysFormUrlQuery } from "@/lib/url";
-import { useRouter } from "next/navigation";
-
 interface Props {
-  route: string;
-  imgSrc: string;
   placeholder: string;
+  imgSrc: string;
   otherClasses?: string;
+  route: string;
 }
 
-const LocalSearch = ({ imgSrc, route, placeholder, otherClasses }: Props) => {
+const LocalSearch = ({ placeholder, imgSrc, otherClasses, route }: Props) => {
+  const searchParams = useSearchParams();
   const pathName = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
+
   const query = searchParams.get("query") || "";
 
   const [searchQuery, setSearchQuery] = useState(query);
@@ -32,16 +31,19 @@ const LocalSearch = ({ imgSrc, route, placeholder, otherClasses }: Props) => {
 
         router.push(newUrl, { scroll: false });
       } else {
-        if (pathName === route) {
+        if (pathName == route) {
           const newUrl = removeKeysFormUrlQuery({
-            params: searchParams.toString(),
             keysToRemove: ["query"],
+            params: searchParams.toString(),
           });
+
           router.push(newUrl, { scroll: false });
         }
       }
     }, 300);
-  }, [searchQuery, router, route, searchParams]);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, route, router, searchParams]);
+
   return (
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow gap-4 rounded-[10px] px-4 items-center ${otherClasses}`}
@@ -50,17 +52,17 @@ const LocalSearch = ({ imgSrc, route, placeholder, otherClasses }: Props) => {
         src={imgSrc}
         width={24}
         height={24}
-        alt="Search"
-        className=" cursor-pointer"
+        alt="Search..."
+        className="cursor-pointer"
       />
       <Input
-        type="text"
+        type="string"
         placeholder={placeholder}
+        className="paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none"
         value={searchQuery}
         onChange={(e) => {
           setSearchQuery(e.target.value);
         }}
-        className="paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none"
       />
     </div>
   );
