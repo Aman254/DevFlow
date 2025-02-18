@@ -47,7 +47,7 @@ const Editor = ({ value, fieldChange, editorRef, ...props }: Props) => {
   return (
     <MDXEditor
       key={resolvedTheme}
-      className="background-light800_dark200 light-border-2  mardown-editor dark-editor w-full border"
+      className="background-light800_dark200 light-border-2  mardown-editor dark-editor grid w-full border"
       markdown={value}
       ref={editorRef}
       onChange={fieldChange}
